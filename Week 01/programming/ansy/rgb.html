@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        
+        div{
+            display: inline-block;
+            width: 100px;
+            height:100px;
+            margin:30px;
+            border-radius: 50%;
+            background-color: grey;
+        }
+        .red.light{
+            background-color: red;
+        }
+        .green.light{
+            background-color:green;
+        }
+        .yellow.light{
+            background-color:yellow;
+        }
+    </style>
+</head>
+<body>
+    <div class="red"></div>
+    <div class="yellow"></div>
+    <div class="green"></div>
+    
+    <!-- <button id="next">next</button> -->
+</body>
+<script>
+    function red(){
+        let lights = document.getElementsByTagName('div');
+        for(let i = 0; i < 3;i++){
+            lights[i].classList.remove('light');
+        }
+        document.getElementsByClassName('red')[0].classList.add('light');
+    }
+    function green(){
+        let lights = document.getElementsByTagName('div');
+        for(let i = 0; i < 3;i++){
+            lights[i].classList.remove('light');
+        }
+        document.getElementsByClassName('green')[0].classList.add('light');
+    }
+    function yellow(){
+        let lights = document.getElementsByTagName('div');
+        for(let i = 0; i < 3;i++){
+            lights[i].classList.remove('light');
+        }
+        document.getElementsByClassName('yellow')[0].classList.add('light');
+    }
+    
+/* //方法一：回调函数，可能导致回调地狱
+    function run(){
+        green();
+        setTimeout(() => {
+            yellow();
+            setTimeout(() => {
+                red();
+                setTimeout(() => {
+                    run();
+                }, 1000);
+            }, 3000);
+        }, 5000);
+    };
+    run();
+ */
+//方法二：promise
+function sleep(t){
+    return new Promise((resolve,reject)=>{
+        setTimeout(resolve, t);
+    });
+}
+function happen(element,event){
+    return new Promise((resolve,reject)=>{
+        element.addEventListener(event,resolve,{once:true});
+    })
+
+}
+async function run(){
+    while(true){
+        green();
+        await sleep(10000);
+        yellow();
+        await sleep(2000);
+        red();
+        await sleep(5000);
+    }
+}
+/* async function run(){
+    while(true){
+        green();
+        await happen(document.getElementById('next'),'click');
+        yellow();
+        await happen(document.getElementById('next'),'click');
+        red();
+        await happen(document.getElementById('next'),'click');
+    }    
+} */
+run();
+
+</script>
+</html>
